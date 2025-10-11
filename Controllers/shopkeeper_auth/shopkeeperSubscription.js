@@ -1,6 +1,9 @@
-// controllers/subscriptionController.js
+
 import Subscription from "../../Models/subscriptionModel.js";
 import ShopkeeperAuth from "../../Models/shopkeeperAuth.js";
+
+import dotenv from 'dotenv';
+dotenv.config(); 
 
 
 const SubscribePlan = async (req, res) => {
