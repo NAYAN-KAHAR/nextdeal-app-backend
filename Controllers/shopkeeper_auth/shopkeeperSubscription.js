@@ -10,6 +10,7 @@ const SubscribePlan = async (req, res) => {
     console.log('mobile', plan, mobile);
 
     if (!mobile) return res.status(401).json({ error: "Unauthorized user" });
+
     if (!['monthly', 'yearly'].includes(plan)) {
       return res.status(400).json({ error: "Invalid plan selected" });
     }
@@ -17,10 +18,12 @@ const SubscribePlan = async (req, res) => {
     const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
     if (!shopkeeper) return res.status(404).json({ error: "Shopkeeper not found" });
 
+
     const existing = await Subscription.findOne({ shopkeeper: shopkeeper._id });
-    if (existing) {
+     if (existing) {
       return res.status(400).json({ error: "Subscription already exists for this shopkeeper" });
     }
+
 
     const price = plan === 'monthly' ? 499 : 4999;
     const expiresAt = plan === 'monthly'
@@ -30,7 +33,9 @@ const SubscribePlan = async (req, res) => {
     const newSubscription = await Subscription.create({shopkeeper: shopkeeper._id, 
          plan,price,
          expiresAt, 
-         remainingCoupons: plan === 'yearly' ? 15 : 0,});
+         remainingCoupons: plan === 'yearly' ? 15 : 0,
+        stripeSessionId: req.body.sessionId
+        });
 
     res.status(200).json({ message:`subscribed successfully to ${plan} plan.`,
       subscription: newSubscription});

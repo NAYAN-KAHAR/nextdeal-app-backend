@@ -30,6 +30,11 @@ const subscriptionSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  stripeSessionId: {
+  type: String,
+  required: false
+ },
+
 }, { timestamps: true });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);

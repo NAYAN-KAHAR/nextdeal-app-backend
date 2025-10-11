@@ -29,6 +29,11 @@ app.use(cors({
   credentials: true
 }));
 
+// app.use(cors({
+//   origin: ['http://localhost:3000', 'http://localhost:3001'],
+//   credentials: true
+// }));
+
 const apiLimit = rateLimit({
   windowMs: 2 * 60 * 1000,
   max: 120,

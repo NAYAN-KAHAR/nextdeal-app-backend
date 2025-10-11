@@ -14,6 +14,9 @@ import getShopkeeper from '../Controllers/shopkeeper_auth/getShopkeeper.js';
 import authMiddleware from '../Controllers/shopkeeper_auth/authMiddleware.js';
 import getShopkeeperSubs from '../Controllers/shopkeeper_auth/getSubs.js';
 
+import createCheckoutSession from '../Controllers/shopkeeper_auth/createCheckoutSession.js';
+import loggedInOnlyMiddleware from '../Controllers/shopkeeper_auth/loggedInOnlyMiddleware.js';
+
 
 import multer from 'multer';
 import cloudinary from 'cloudinary';
@@ -29,7 +32,7 @@ router.get('/shop-verify', authMiddleware, (req, res) => {
   res.status(200).json({ authenticated: true});
 });
 
-router.get('/shop-verify-intro', verifyShopkeeper);
+router.get('/shop-verify-intro', loggedInOnlyMiddleware);
 
 
 router.get('/shopkeeper-profile',authMiddleware, getShopkeeper);
@@ -38,7 +41,9 @@ router.post('/shop-signup', signUpController);
 router.post('/shop-login', loginController);
 router.post('/shop-logout', logoutController);
 
-router.post('/shop-subscribePlan', authMiddleware, SubscribePlan);
+router.post('/shop-subscribePlan', loggedInOnlyMiddleware, SubscribePlan);
+router.post('/shop-create-checkout-session', loggedInOnlyMiddleware, createCheckoutSession);
+
 
 // cloudinary config
 cloudinary.config({
