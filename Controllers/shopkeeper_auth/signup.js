@@ -1,0 +1,43 @@
+
+import ShopkeeperAuth from '../../Models/shopkeeperAuth.js';
+import bcrypt from 'bcrypt';
+import Joi  from 'joi';
+ 
+
+
+const shopkeeperSchema = Joi.object({
+      business_name: Joi.string().trim().min(2).required(),
+      mobile: Joi.string().pattern(/^[0-9]{10}$/).required()
+      .messages({message:'Mobile number must be exactly 10 digits'}),
+      address: Joi.string().trim().min(2).required(),
+      business_category:Joi.string().trim().required()
+});
+
+
+const signUpController = async (req, res) => {
+  try {
+   
+    const { business_name, mobile, address, business_category } = await shopkeeperSchema.validateAsync(req.body);
+    console.log('req body :', req.body);
+    const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile });
+    if (shopkeeperExist) {
+      return res.status(400).json({ error: 'shopkeeper already exists' });
+    }
+    
+    const shopkeeperData = {
+      business_name: business_name.toLowerCase(),
+      mobile,
+      address:address.toLowerCase(),
+      business_category: business_category.toLowerCase(),
+    };
+
+    const shopkeeper = await ShopkeeperAuth.create(shopkeeperData);
+    return res.status(201).json({ message: 'shopkeeper created successfully', shopkeeper });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error:err, message:'server error' });
+  }
+};
+
+export default signUpController;
