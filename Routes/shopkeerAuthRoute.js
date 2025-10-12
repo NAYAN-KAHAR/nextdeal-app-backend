@@ -32,7 +32,9 @@ router.get('/shop-verify', authMiddleware, (req, res) => {
   res.status(200).json({ authenticated: true});
 });
 
-router.get('/shop-verify-intro', loggedInOnlyMiddleware);
+router.get('/shop-verify-intro', loggedInOnlyMiddleware, (req, res) => {
+  res.status(200).json({ authenticated: true});
+});
 
 
 router.get('/shopkeeper-profile',authMiddleware, getShopkeeper);

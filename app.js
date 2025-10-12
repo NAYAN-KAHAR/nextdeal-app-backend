@@ -26,14 +26,11 @@ app.use(helmet());
 
 app.use(cors({
    origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
-  // origin: ['http://localhost:3000'],
+  //  origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true
 }));
 
-// app.use(cors({
-//   origin: ['http://localhost:3000', 'http://localhost:3001'],
-//   credentials: true
-// }));
+
 
 const apiLimit = rateLimit({
   windowMs: 2 * 60 * 1000,

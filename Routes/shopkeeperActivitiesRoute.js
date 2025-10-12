@@ -44,7 +44,7 @@ router.delete('/shop-free-coupons-delete/:id',authMiddleware, DeleteFreeCoupon);
 
 
 // recurring coupons routes
-router.get('/shop-get-allrecurringcoupon',   authMiddleware, getAllRecurringCoupons);
+router.get('/shop-get-allrecurringcoupon/:page/:limit',   authMiddleware, getAllRecurringCoupons);
 router.post('/shop-recurringcoupon-create', authMiddleware, recurringCouponLogic);
 
 router.put('/shop-recurringcoupon-update/:id', authMiddleware, UpdateRecurringCoupon)
