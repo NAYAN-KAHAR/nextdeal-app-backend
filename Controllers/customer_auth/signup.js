@@ -2,7 +2,7 @@
 import customersAuth from '../../Models/customerAuth.js';
 import bcrypt from 'bcrypt';
 import Joi  from 'joi';
- 
+import ShopkeeperAuth from '../../Models/shopkeeperAuth.js';
 
 
 const customerSchema = Joi.object({
@@ -22,6 +22,13 @@ const signUpController = async (req, res) => {
     if (userExist) {
       return res.status(400).json({ error: 'User already exists' });
     }
+
+    const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile });
+    if (shopkeeperExist) {
+      return res.status(400).json({ error: 'Number already exists' });
+    }
+
+
     const hashPassword = bcrypt.hashSync(password, 10);
     
     const userData = {

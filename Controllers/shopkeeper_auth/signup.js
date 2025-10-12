@@ -2,7 +2,7 @@
 import ShopkeeperAuth from '../../Models/shopkeeperAuth.js';
 import bcrypt from 'bcrypt';
 import Joi  from 'joi';
- 
+import customersAuth from '../../Models/customerAuth.js';
 
 
 const shopkeeperSchema = Joi.object({
@@ -19,10 +19,16 @@ const signUpController = async (req, res) => {
    
     const { business_name, mobile, address, business_category } = await shopkeeperSchema.validateAsync(req.body);
     console.log('req body :', req.body);
+
     const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile });
     if (shopkeeperExist) {
       return res.status(400).json({ error: 'shopkeeper already exists' });
     }
+    
+    const customer = await customersAuth.findOne({ mobile });
+    if(customer){
+       return res.status(400).json({ error: 'Number already exists' });
+    } 
     
     const shopkeeperData = {
       business_name: business_name.toLowerCase(),
