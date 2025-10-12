@@ -42,7 +42,7 @@ const signUpController = async (req, res) => {
 
   } catch (err) {
     // console.error(err);
-    return res.status(403).json({ error:err.details[0].message });
+    return res.status(403).json({ error:err });
   }
 };
 

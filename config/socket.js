@@ -9,7 +9,8 @@ const shopkeeperSockets = new Map(); // mobile -> socket.id
 const createSocketServer = (server) => {
   io = new Server(server, {
     cors: {
-      origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app','https://nextdeal-app-customer-frontend-s138.vercel.app'],
+      origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
+        'https://nextdeal-app-customer-frontend-s138.vercel.app'],
       // origin: ['http://localhost:3000', 'http://localhost:3001'],
       credentials: true,
     },
@@ -63,7 +64,7 @@ const createSocketServer = (server) => {
         io.to(targetSocketId).emit('redeem-coupon', data);
         console.log(`Sent redeem-coupon to shopkeeper ${shopkeeper_mobile}`);
       } else {
-        console.log(`No connected shopkeeper for mobile: ${shopkeeper_mobile}`);
+        console.log(`No connectedded shopkeeper for mobile: ${shopkeeper_mobile}`);
 
         // Optionally save to DB to queue for offline shopkeeper
         try {
