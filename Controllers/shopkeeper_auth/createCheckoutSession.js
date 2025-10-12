@@ -19,7 +19,7 @@ const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: `https://nextdeal-app-shopkeerper-frontend.vercel.app?plan=${plan}`,
+      success_url: `https://nextdeal-app-shopkeerper-frontend.vercel.app/Success?plan=${plan}`,
       cancel_url: `https://nextdeal-app-shopkeerper-frontend.vercel.app/Subcription`,
 
       // success_url: `http://localhost:3000/Success?plan=${plan}`,
