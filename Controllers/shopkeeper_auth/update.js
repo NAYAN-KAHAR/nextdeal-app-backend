@@ -37,9 +37,19 @@ const updateShopkeeperProfile = async (req, res) => {
 
    const updateFields = {};
 
+   if (email) {
+    const existingEmailUser = await ShopkeeperAuth.findOne({ email });
+
+    if (existingEmailUser && existingEmailUser.mobile !== mobile) {
+      return res.status(400).json({ message: 'Email already in use by another shopkeeper' });
+    }
+   updateFields.email = email;
+  }
+
+
     if (business_name) updateFields.business_name = business_name;
     if (business_category) updateFields.business_category = business_category;
-    if (email) updateFields.email = email;
+    // if (email) updateFields.email = email;
     if (address) updateFields.address = address;
     if (shopImg) updateFields.shopImg = shopImg;
     if (city) updateFields.city = city;

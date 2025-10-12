@@ -25,7 +25,8 @@ app.use(cookieParser());
 app.use(helmet());
 
 app.use(cors({
-   origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
+  //  origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
+  origin: ['http://localhost:3000'],
   credentials: true
 }));
 
@@ -42,6 +43,8 @@ const apiLimit = rateLimit({
 app.use(apiLimit);
 
 
+
+
 mongoose.connection.on('error', (err) => {
   console.log('Database connection failed', err);
 });
@@ -55,6 +58,8 @@ app.use('/api', customerAuthRoute);
 app.use('/api', shopkeeperAuthRoute);
 app.use('/api', shopkeeperActivitiesRoute);
 app.use('/api', customers_activities);
+
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;

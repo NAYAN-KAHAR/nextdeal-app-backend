@@ -9,8 +9,8 @@ const shopkeeperSockets = new Map(); // mobile -> socket.id
 const createSocketServer = (server) => {
   io = new Server(server, {
     cors: {
-      origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
-      // origin: ['http://localhost:3000', 'http://localhost:3001'],
+      // origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
+      origin: ['http://localhost:3000', 'http://localhost:3001'],
       credentials: true,
     },
   });

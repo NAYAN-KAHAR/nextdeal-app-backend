@@ -9,7 +9,7 @@ const customersModel = new mongoose.Schema({
   business_category: { type: String,required: true,},
 
   shopImg:String,
-  email:{ type: String, unique:true },
+  email: { type: String, unique: true, sparse: true },
   city:String,
   min_offer:String,
   max_offer:String,
