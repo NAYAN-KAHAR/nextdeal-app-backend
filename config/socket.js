@@ -50,32 +50,46 @@ const createSocketServer = (server) => {
     });
 
     // Handle redeem request from customer
-    socket.on('redeem-coupon', async (data) => {
-      const { shopkeeper_mobile } = data;
-      if (!shopkeeper_mobile) {
-        console.log('redeem-coupon event missing shopkeeper_mobile');
+   socket.on('redeem-coupon', async (data) => {
+  const { shopkeeper_mobile, customer_mobile, coupon_code } = data;
+
+  if (!shopkeeper_mobile || !customer_mobile || !coupon_code) {
+    console.log('redeem-coupon event missing required fields');
+    return;
+  }
+
+  const targetSocketId = shopkeeperSockets.get(shopkeeper_mobile);
+  console.log('Received redeem-coupon data:', data);
+
+  if (targetSocketId) {
+    io.to(targetSocketId).emit('redeem-coupon', data);
+    console.log(`Sent redeem-coupon to shopkeeper ${shopkeeper_mobile}`);
+  } else {
+    console.log(`No connected shopkeeper for mobile: ${shopkeeper_mobile}`);
+
+    try {
+     
+      const alreadyExists = await RedeemedCoupon.findOne({
+        shopkeeper_mobile,
+        customer_mobile,
+        coupon_code,
+      });
+
+      if (alreadyExists) {
+        console.log('Duplicate coupon detected. Not saving again.');
         return;
       }
 
-      const targetSocketId = shopkeeperSockets.get(shopkeeper_mobile);
-      console.log('Received redeem-coupon data:', data);
+      // no duplicate, save it
+      const couponDoc = new RedeemedCoupon({ ...data, delivered: false });
+      await couponDoc.save();
+      console.log('Coupon saved for later delivery');
+    } catch (error) {
+      console.error('Failed to save coupon for offline shopkeeper:', error);
+    }
+  }
+});
 
-      if (targetSocketId) {
-        io.to(targetSocketId).emit('redeem-coupon', data);
-        console.log(`Sent redeem-coupon to shopkeeper ${shopkeeper_mobile}`);
-      } else {
-        console.log(`No connectedded shopkeeper for mobile: ${shopkeeper_mobile}`);
-
-        // Optionally save to DB to queue for offline shopkeeper
-        try {
-          const couponDoc = new RedeemedCoupon({ ...data, delivered: false });
-          await couponDoc.save();
-          console.log('Coupon saved for later delivery');
-        } catch (error) {
-          console.error('Failed to save coupon for offline shopkeeper:', error);
-        }
-      }
-    });
 
     // Clean up on disconnect
     socket.on('disconnect', () => {
