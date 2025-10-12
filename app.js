@@ -25,8 +25,8 @@ app.use(cookieParser());
 app.use(helmet());
 
 app.use(cors({
-  //  origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
-  origin: ['http://localhost:3000'],
+   origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app', 'https://nextdeal-app-customer-frontend.vercel.app'],
+  // origin: ['http://localhost:3000'],
   credentials: true
 }));
 
