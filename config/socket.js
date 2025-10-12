@@ -10,7 +10,7 @@ const createSocketServer = (server) => {
   io = new Server(server, {
     cors: {
       origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
-        'https://nextdeal-app-customer-frontend-s138.vercel.app'],
+        'https://nextdeal-app-customer-frontend.vercel.app'],
       // origin: ['http://localhost:3000', 'http://localhost:3001'],
       credentials: true,
     },
