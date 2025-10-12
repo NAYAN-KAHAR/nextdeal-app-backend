@@ -31,7 +31,7 @@ const getAllRecurringCouponsOffers = async (req, res) => {
           }
         }
 
-     res.status(200).json({page,limit,total:filteredCoupons.length, filteredCoupons});
+     res.status(200).json({filteredCoupons});
       
 
   } catch (error) {
