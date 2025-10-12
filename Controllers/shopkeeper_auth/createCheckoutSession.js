@@ -29,7 +29,6 @@ const createCheckoutSession = async (req, res) => {
     console.log("Creating Stripe session with params:", params);
 
     const session = await stripe.checkout.sessions.create(params);
-
     console.log("Stripe session created:", session);
 
     if (!session.url) {
