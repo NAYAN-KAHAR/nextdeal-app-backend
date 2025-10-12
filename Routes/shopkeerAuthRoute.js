@@ -23,13 +23,15 @@ import cloudinary from 'cloudinary';
 import fs from 'fs-extra';
 
 import dotenv from 'dotenv';
+import { decode } from 'jsonwebtoken';
 dotenv.config(); 
 
 
 const router = Router();
 
 router.get('/shop-verify', authMiddleware, (req, res) => {
-  res.status(200).json({ authenticated: true});
+  const { shopkeeper } = req;
+  res.status(200).json({ authenticated: true, shopkeeper});
 });
 
 router.get('/shop-verify-intro', loggedInOnlyMiddleware, (req, res) => {

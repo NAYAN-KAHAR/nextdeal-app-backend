@@ -41,6 +41,7 @@ const authMiddleware = async (req, res, next) => {
 
     // ✅ Everything valid
     req.user = decoded;
+    req.shopkeeper = shopkeeper;
     req.subscription = subscription;
     next();
 

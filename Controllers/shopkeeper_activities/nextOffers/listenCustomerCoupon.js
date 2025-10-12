@@ -13,12 +13,14 @@ const ListenRedeemCoupon = async (req, res) => {
         return res.status(404).json({ error: 'Shopkeeper not found' });
         }
 
-   
+      console.log('mobile.', mobile);
+
      const Allredeemed = await redeemedCouponModel.find({ shopkeeper_mobile: mobile }).sort({ redeemedAt: -1 });
        if(!Allredeemed){
           return res.json({message:'Does Not exist Redeemed Coupon'});
      }
      
+    
       const filteredCoupons = [];
       for (let left of Allredeemed) {
           console.log(left);
@@ -30,7 +32,9 @@ const ListenRedeemCoupon = async (req, res) => {
           }
     }
 
-     return res.status(201).json({message: 'Coupon redeemed geted successfully', redeemed:filteredCoupons });
+     return res.status(201).json({message: 'Coupon redeemed geted successfully',
+       redeemed:filteredCoupons,
+       });
   } catch (error) {
     console.error('Redeem coupon error:', error);
     res.status(500).json({ error: 'Internal Server Error' });

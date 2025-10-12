@@ -1,7 +1,6 @@
-// socket.js
 import { Server } from 'socket.io';
-import ShopkeeperAuth from '../Models/shopkeeperAuth.js'
-import RedeemedCoupon from '../Models/redeemedCouponModel.js';
+import ShopkeeperAuth from '../Models/shopkeeperAuth.js';
+import redeemedCouponModel from '../Models/redeemedCouponModel.js';
 
 let io;
 const shopkeeperSockets = new Map(); // mobile -> socket.id
@@ -19,87 +18,106 @@ const createSocketServer = (server) => {
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
-    // Shopkeeper registers themselves with mobile
+    // 🧾 Register shopkeeper by mobile
     socket.on('register-shopkeeper', async (mobile) => {
       if (!mobile) return;
 
-      // Verify shopkeeper exists in DB
-      const exists = await ShopkeeperAuth.findOne({ mobile });
-      if (!exists) {
-        console.log(`Unverified shopkeeper attempted to register: ${mobile}`);
-        return;
-      }
-
-      shopkeeperSockets.set(mobile, socket.id);
-      console.log(`Shopkeeper ${mobile} registered with socket ${socket.id}`);
-
-      // Get all undelivered coupons for this shopkeeper and emit them
       try {
-        const undeliveredCoupons = await RedeemedCoupon.find({ shopkeeper_mobile: mobile, delivered: false });
+        const exists = await ShopkeeperAuth.findOne({ mobile });
+        if (!exists) {
+          console.log(`Unverified shopkeeper tried to register: ${mobile}`);
+          return;
+        }
+
+        shopkeeperSockets.set(mobile, socket.id);
+        console.log(`Shopkeeper ${mobile} registered with socket ${socket.id}`);
+
+        // 🔄 Emit only undelivered coupons
+        const undeliveredCoupons = await redeemedCouponModel.find({
+          shopkeeper_mobile: mobile,
+          delivered: false
+        });
 
         for (const coupon of undeliveredCoupons) {
-          io.to(socket.id).emit('redeem-coupon', coupon);
+          try {
+            io.to(socket.id).emit('redeem-coupon', coupon);
+            console.log(`Sent undelivered coupon to ${mobile}`);
 
-          // Mark coupon as delivered
-          coupon.delivered = true;
-          await coupon.save();
+            // Mark as delivered
+            coupon.delivered = true;
+            await coupon.save();
+          } catch (e) {
+            console.error(`Error delivering coupon:`, e.message);
+          }
         }
       } catch (err) {
-        console.error('Error fetching/sending undelivered coupons:', err);
+        console.error(' Error in register-shopkeeper:', err.message);
       }
     });
 
-    // Handle redeem request from customer
-   socket.on('redeem-coupon', async (data) => {
-  const { shopkeeper_mobile, customer_mobile, coupon_code } = data;
-
-  if (!shopkeeper_mobile || !customer_mobile || !coupon_code) {
-    console.log('redeem-coupon event missing required fields');
-    return;
-  }
-
-  const targetSocketId = shopkeeperSockets.get(shopkeeper_mobile);
-  console.log('Received redeem-coupon data:', data);
-
-  if (targetSocketId) {
-    io.to(targetSocketId).emit('redeem-coupon', data);
-    console.log(`Sent redeem-coupon to shopkeeper ${shopkeeper_mobile}`);
-  } else {
-    console.log(`No connected shopkeeper for mobile: ${shopkeeper_mobile}`);
-
-    try {
-     
-      const alreadyExists = await RedeemedCoupon.findOne({
+    // 💳 Redeem coupon event
+    socket.on('redeem-coupon', async (data) => {
+      const {
         shopkeeper_mobile,
         customer_mobile,
-        coupon_code,
-      });
+        coupon_id,
+        couponName,
+        discount,
+        discountType,
+        spendingAmount
+      } = data;
 
-      if (alreadyExists) {
-        console.log('Duplicate coupon detected. Not saving again.');
+      if (!shopkeeper_mobile || !customer_mobile || !coupon_id || !couponName || !discount || !discountType || !spendingAmount) {
+        console.log('Missing required coupon fields:', data);
         return;
       }
 
-      // no duplicate, save it
-      const couponDoc = new RedeemedCoupon({ ...data, delivered: false });
-      await couponDoc.save();
-      console.log('Coupon saved for later delivery');
-    } catch (error) {
-      console.error('Failed to save coupon for offline shopkeeper:', error);
-    }
-  }
-});
+      try {
+        // Check if this coupon was already redeemed
+        const alreadyExists = await redeemedCouponModel.findOne({
+          shopkeeper_mobile,
+          customer_mobile,
+          coupon_id,
+        });
 
+        if (alreadyExists) {
+          console.log('Duplicate coupon detected. Skipping save.');
+          return;
+        }
 
-    // Clean up on disconnect
+        // Save new coupon
+        const couponDoc = new redeemedCouponModel({
+          ...data,
+          delivered: false
+        });
+
+        await couponDoc.save();
+        console.log('Coupon saved to DB');
+
+        const targetSocketId = shopkeeperSockets.get(shopkeeper_mobile);
+
+        if (targetSocketId) {
+          io.to(targetSocketId).emit('redeem-coupon', couponDoc);
+          console.log(`Coupon sent to online shopkeeper ${shopkeeper_mobile}`);
+
+          couponDoc.delivered = true;
+          await couponDoc.save();
+        } else {
+          console.log(`Shopkeeper ${shopkeeper_mobile} offline. Coupon will be sent later.`);
+        }
+      } catch (err) {
+          console.error('❌ Error redeeming coupon:', err);
+      }
+    });
+
+    // 🔌 Handle disconnect
     socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+      console.log('🔴 User disconnected:', socket.id);
 
-      // Remove from shopkeeperSockets
       for (const [mobile, id] of shopkeeperSockets.entries()) {
         if (id === socket.id) {
           shopkeeperSockets.delete(mobile);
-          console.log(`Removed shopkeeper ${mobile} from active sockets`);
+          console.log(`🗑️ Removed shopkeeper ${mobile} from active sockets`);
           break;
         }
       }
