@@ -35,10 +35,20 @@ const updateProfile = async (req, res) => {
       profileImg = response.secure_url;
     }
 
-   const updateFields = {};
+    const updateFields = {};
+
+     if (email) {
+        const existingEmailUser = await customersAuth.findOne({ email });
+    
+        if (existingEmailUser && existingEmailUser.mobile !== mobile) {
+          return res.status(400).json({ message: 'Email already in use by another shopkeeper' });
+        }
+       updateFields.email = email;
+      }
+    
 
     if (name) updateFields.name = name;
-    if (email) updateFields.email = email;
+    // if (email) updateFields.email = email;
     if (address) updateFields.address = address;
     if (profileImg) updateFields.profileImg = profileImg;
 

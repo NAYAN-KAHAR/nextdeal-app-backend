@@ -41,9 +41,13 @@ const signUpController = async (req, res) => {
     return res.status(201).json({ message: 'User created successfully', user });
 
   } catch (err) {
-    // console.error(err);
-    return res.status(403).json({ error:err });
+  if (err.isJoi && err.details && err.details.length > 0) {
+    return res.status(400).json({ error: err.details[0].message });
   }
-};
 
-export default signUpController;
+  console.error('Unexpected error during signup:', err);
+  return res.status(500).json({ error: 'Internal server error' });
+}
+
+}
+export default signUpController

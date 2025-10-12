@@ -11,10 +11,14 @@ import shopkeeperAuthRoute from './Routes/shopkeerAuthRoute.js';
 import shopkeeperActivitiesRoute from './Routes/shopkeeperActivitiesRoute.js';
 import customers_activities from './Routes/customersActivitiesRoute.js';
 
+// import customersAuth from './Models/customerAuth.js';
+
 import { createSocketServer } from './config/socket.js'; 
+
 
 const app = express();
 const server = http.createServer(app);
+
 
 // Initialize Socket.IO
 createSocketServer(server);
@@ -52,6 +56,8 @@ mongoose.connection.on('error', (err) => {
 mongoose.connection.on('open', () => {
   console.log('Database connected');
 });
+
+
 
 // Routes
 app.use('/api', customerAuthRoute);

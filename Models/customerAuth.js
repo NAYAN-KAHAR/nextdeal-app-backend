@@ -17,7 +17,7 @@ const customersModel = new mongoose.Schema({
   },
   profileImg:String,
   address:String,
-  email:{ type: String, unique:true },
+  email: { type: String, unique: true, sparse: true },
 }, { timestamps: true });
 
 const customersAuth = mongoose.model('Customers', customersModel);
