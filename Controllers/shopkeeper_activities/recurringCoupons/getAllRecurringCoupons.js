@@ -22,15 +22,28 @@ const getAllFreeCoupons = async (req, res) => {
            return res.json({ message: 'No Coupons found' });
         }
 
-        const filteredCoupons = [];
+//         const filteredCoupons = [];
 
-        for (const coupon of allRecurringCoupons) {
-          const isUsed = await SaleCouponsModel.exists({ 'coupon_id': coupon._id });
-          if (!isUsed) {
-            filteredCoupons.push(coupon);
-          }
-        }
+//         for (const coupon of allRecurringCoupons) {
+//           const isUsed = await SaleCouponsModel.exists({ 'coupon_id': coupon._id });
+//           if (!isUsed) {
+//             filteredCoupons.push(coupon);
+//           }
+//         }
 
+// // Get pagination values
+//     const page = parseInt(req.params.page) || 1;
+//     const limit = parseInt(req.params.limit) || 5;
+
+//     const startIndex = (page - 1) * limit;
+//     const endIndex = startIndex + limit;
+
+//     // Apply pagination
+//     const paginatedCoupons = filteredCoupons.slice(startIndex, endIndex);
+
+//    res.status(200).json({page,limit,total:filteredCoupons.length, filteredCoupons:paginatedCoupons});
+      
+  
 // Get pagination values
     const page = parseInt(req.params.page) || 1;
     const limit = parseInt(req.params.limit) || 5;
@@ -39,9 +52,9 @@ const getAllFreeCoupons = async (req, res) => {
     const endIndex = startIndex + limit;
 
     // Apply pagination
-    const paginatedCoupons = filteredCoupons.slice(startIndex, endIndex);
+    const paginatedCoupons = allRecurringCoupons.slice(startIndex, endIndex);
 
-   res.status(200).json({page,limit,total:filteredCoupons.length, filteredCoupons:paginatedCoupons});
+   res.status(200).json({page,limit,total:allRecurringCoupons.length, filteredCoupons:paginatedCoupons});
       
 
   } catch (error) {

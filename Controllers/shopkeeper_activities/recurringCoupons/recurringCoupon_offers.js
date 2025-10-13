@@ -22,16 +22,16 @@ const getAllRecurringCouponsOffers = async (req, res) => {
            return res.json({ message: 'No Coupons found' });
         }
 
-        const filteredCoupons = [];
+        // const filteredCoupons = [];
 
-        for (const coupon of allRecurringCoupons) {
-          const isUsed = await SaleCouponsModel.exists({ 'coupon_id': coupon._id });
-          if (!isUsed) {
-            filteredCoupons.push(coupon);
-          }
-        }
+        // for (const coupon of allRecurringCoupons) {
+        //   const isUsed = await SaleCouponsModel.exists({ 'coupon_id': coupon._id });
+        //   if (!isUsed) {
+        //     filteredCoupons.push(coupon);
+        //   }
+        // }
 
-     res.status(200).json({filteredCoupons});
+     res.status(200).json({filteredCoupons: allRecurringCoupons});
       
 
   } catch (error) {
