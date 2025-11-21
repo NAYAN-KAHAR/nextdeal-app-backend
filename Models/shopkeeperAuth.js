@@ -1,10 +1,10 @@
 
 import mongoose from "mongoose";
 
-const customersModel = new mongoose.Schema({
+const ShopkeepersModel = new mongoose.Schema({
   
   business_name: {type: String,required: true},
-  mobile: { type: String,required: true,unique: true},
+  mobile: { type: String,required: true,unique: true, index:true},
   address: {type: String,required: true},
   business_category: { type: String,required: true,},
 
@@ -16,5 +16,5 @@ const customersModel = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const ShopkeeperAuth = mongoose.model('Shopkeepers', customersModel);
+const ShopkeeperAuth = mongoose.model('Shopkeepers', ShopkeepersModel);
 export default ShopkeeperAuth;

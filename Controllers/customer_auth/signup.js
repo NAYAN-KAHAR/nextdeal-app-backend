@@ -15,39 +15,36 @@ const customerSchema = Joi.object({
 
 const signUpController = async (req, res) => {
   try {
-   
     const { name, mobile, password } = await customerSchema.validateAsync(req.body);
 
-    const userExist = await customersAuth.findOne({ mobile });
-    if (userExist) {
-      return res.status(400).json({ error: 'User already exists' });
-    }
-
-    const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile });
+    const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile }).lean();
     if (shopkeeperExist) {
-      return res.status(400).json({ error: 'Number already exists' });
+      return res.status(400).json({ error: "Number already registered as shopkeeper" });
     }
 
+    const hashPassword = await bcrypt.hash(password, 10);
 
-    const hashPassword = bcrypt.hashSync(password, 10);
-    
-    const userData = {
-      name: req.body.name.toLowerCase(),
+    // Let MongoDB handle duplicate customer mobile
+    const user = await customersAuth.create({
+      name: name.toLowerCase(),
       mobile,
       password: hashPassword,
-    };
+    });
 
-    const user = await customersAuth.create(userData);
     return res.status(201).json({ message: 'User created successfully', user });
 
   } catch (err) {
-  if (err.isJoi && err.details && err.details.length > 0) {
-    return res.status(400).json({ error: err.details[0].message });
+    if (err.code === 11000) {
+      return res.status(400).json({ error: "Mobile number already registered" });
+    }
+
+    if (err.isJoi) {
+      return res.status(400).json({ error: err.details[0].message });
+    }
+
+    console.error(err);
+    return res.status(500).json({ error: 'Server error' });
   }
+};
 
-  console.error('Unexpected error during signup:', err);
-  return res.status(500).json({ error: 'Internal server error' });
-}
-
-}
-export default signUpController
+export default signUpController;

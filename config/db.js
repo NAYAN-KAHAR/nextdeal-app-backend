@@ -7,7 +7,7 @@ const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 
 // const url = `mongodb+srv://admin123:nayan123@cluster0.yar3p.mongodb.net/Authentication?retryWrites=true&w=majority&appName=MY-DATABASE`;
 
-mongoose.connect(url);
+mongoose.connect(url, { maxPoolSize:500 });
 
 
 export default mongoose;

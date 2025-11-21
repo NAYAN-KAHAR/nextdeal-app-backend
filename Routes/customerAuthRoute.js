@@ -25,13 +25,6 @@ router.post('/login', loginController);
 router.post('/logout', logoutController);
 
 
-// // cloudinary config
-// cloudinary.config({
-//     cloud_name: 'dx0qmwrrz',
-//     api_key: '849214223577591',
-//     api_secret: '_sIKa0UtNClm2FkdLztVkykr6XU'
-// });
-
 
 // cloudinary config
 cloudinary.config({

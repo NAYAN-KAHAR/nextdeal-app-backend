@@ -1,4 +1,3 @@
-// models/Subscription.js
 
 import mongoose from "mongoose";
 
@@ -30,11 +29,23 @@ const subscriptionSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  stripeSessionId: {
-  type: String,
-  required: false
- },
-
+  cashfreePaymentId: { // store Cashfree payment/order ID
+    type: String,
+    required: false,
+  },
+  trial: {
+    type: Boolean,
+    default: true, // new users start with trial
+  },
+  wasTrialUsed: {
+    type: Boolean,
+    default: false,
+  },
+  initialTrialPlan: {
+    type: String,
+    enum: ['monthly', 'yearly'],
+    required: false,
+  },
 }, { timestamps: true });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);

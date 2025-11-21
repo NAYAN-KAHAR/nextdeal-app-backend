@@ -38,7 +38,7 @@ const updateProfile = async (req, res) => {
     const updateFields = {};
 
      if (email) {
-        const existingEmailUser = await customersAuth.findOne({ email });
+        const existingEmailUser = await customersAuth.findOne({ email}, { mobile:1 }).lean();
     
         if (existingEmailUser && existingEmailUser.mobile !== mobile) {
           return res.status(400).json({ message: 'Email already in use by another shopkeeper' });

@@ -8,9 +8,9 @@ const shopkeeperSockets = new Map(); // mobile -> socket.id
 const createSocketServer = (server) => {
   io = new Server(server, {
     cors: {
-      origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
-        'https://nextdeal-app-customer-frontend.vercel.app'],
-      // origin: ['http://localhost:3000', 'http://localhost:3001'],
+      // origin: ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
+      //   'https://nextdeal-app-customer-frontend.vercel.app'],
+      origin: ['http://localhost:3000', 'http://localhost:3001'],
       credentials: true,
     },
   });
@@ -133,6 +133,94 @@ const getIO = () => {
 };
 
 export { createSocketServer, getIO };
+
+/*
+import { Server } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+import ShopkeeperAuth from '../Models/shopkeeperAuth.js';
+import redeemedCouponModel from '../Models/redeemedCouponModel.js';
+
+let io;
+
+const createSocketServer = (server) => {
+  io = new Server(server, {
+    cors: {
+      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      credentials: true,
+    },
+  });
+
+  // Redis adapter setup
+  const pubClient = createClient({ url: 'redis://localhost:6379' });
+  const subClient = pubClient.duplicate();
+  pubClient.connect();
+  subClient.connect();
+  io.adapter(createAdapter(pubClient, subClient));
+
+  io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    socket.on('register-shopkeeper', async (mobile) => {
+      if (!mobile) return;
+
+      try {
+        const exists = await ShopkeeperAuth.findOne({ mobile });
+        if (!exists) return;
+
+        // Store mapping in Redis for all workers
+        await pubClient.hSet('shopkeeperSockets', mobile, socket.id);
+
+        const undeliveredCoupons = await redeemedCouponModel.find({
+          shopkeeper_mobile: mobile,
+          delivered: false
+        });
+
+        for (const coupon of undeliveredCoupons) {
+          io.to(socket.id).emit('redeem-coupon', coupon);
+          coupon.delivered = true;
+          await coupon.save();
+        }
+      } catch (err) {
+        console.error('Error in register-shopkeeper:', err.message);
+      }
+    });
+
+    socket.on('redeem-coupon', async (data) => {
+      const { shopkeeper_mobile } = data;
+      if (!shopkeeper_mobile) return;
+
+      try {
+        const couponDoc = await redeemedCouponModel.create({ ...data, delivered: false });
+
+        const targetSocketId = await pubClient.hGet('shopkeeperSockets', shopkeeper_mobile);
+        if (targetSocketId) {
+          io.to(targetSocketId).emit('redeem-coupon', couponDoc);
+          couponDoc.delivered = true;
+          await couponDoc.save();
+        }
+      } catch (err) {
+        console.error('Error redeeming coupon:', err);
+      }
+    });
+
+    socket.on('disconnect', async () => {
+      const shopkeepers = await pubClient.hGetAll('shopkeeperSockets');
+      for (const [mobile, id] of Object.entries(shopkeepers)) {
+        if (id === socket.id) {
+          await pubClient.hDel('shopkeeperSockets', mobile);
+        }
+      }
+    });
+  });
+
+  return io;
+};
+
+export { createSocketServer };
+
+*/
+
 
 
 // // socket.js

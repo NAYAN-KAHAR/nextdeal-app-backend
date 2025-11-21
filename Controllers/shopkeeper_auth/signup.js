@@ -18,16 +18,11 @@ const signUpController = async (req, res) => {
   try {
    
     const { business_name, mobile, address, business_category } = await shopkeeperSchema.validateAsync(req.body);
-    console.log('req body :', req.body);
-
-    const shopkeeperExist = await ShopkeeperAuth.findOne({ mobile });
-    if (shopkeeperExist) {
-      return res.status(400).json({ error: 'shopkeeper already exists' });
-    }
-    
-    const customer = await customersAuth.findOne({ mobile });
+    // console.log('req body :', req.body);
+  
+    const customer = await customersAuth.findOne({ mobile }).lean();
     if(customer){
-       return res.status(400).json({ error: 'Number already exists' });
+       return res.status(400).json({ error: 'Number already exists as a Customer' });
     } 
     
     const shopkeeperData = {
@@ -38,10 +33,13 @@ const signUpController = async (req, res) => {
     };
 
     const shopkeeper = await ShopkeeperAuth.create(shopkeeperData);
-    return res.status(201).json({ message: 'shopkeeper created successfully', shopkeeper });
+    return res.status(201).json({ message: 'Account created successfully', shopkeeper });
 
   } catch (err) {
     console.error(err);
+     if (err.code === 11000) {
+      return res.status(400).json({ error: "Mobile number already registered" });
+    }
     return res.status(500).json({ error:err, message:'server error' });
   }
 };

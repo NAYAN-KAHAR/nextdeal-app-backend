@@ -6,7 +6,7 @@ const getUser = async (req, res) => {
     // req.user is set by authMiddleware
     const mobile = req.user?.mobile;
 
-    const user = await customersAuth.findOne({ mobile });
+    const user = await customersAuth.findOne({ mobile }).lean();
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
