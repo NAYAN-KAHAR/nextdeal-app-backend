@@ -7,18 +7,20 @@ import { createClient } from 'redis';
 //    url: "redis://127.0.0.1:6379"
 // });
 
+
 const redisClient = createClient({
-  url: process.env.REDIS_URL,
-  socket: {
-    tls: true,
-    rejectUnauthorized: false
-  }
+  url: process.env.REDIS_URL  // use the environment variable
 });
 
 redisClient.on("error", (err) => {
-  console.error("Redis error:", err);
+  console.error("Redis connection error:", err);
+});
+
+redisClient.on("connect", () => {
+  console.log("Redis connected");
 });
 
 await redisClient.connect();
 
 export default redisClient;
+
