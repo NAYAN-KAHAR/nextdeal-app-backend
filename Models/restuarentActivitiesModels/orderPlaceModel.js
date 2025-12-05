@@ -10,16 +10,16 @@ const orderSchema = new mongoose.Schema(
 
     restaurantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Restaurant",
+      ref: "RestaurantsOwner",
       required: true,
     },
 
     // Items in this order
-    items: [
+  items: [
       {
         foodItemId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "FoodSubCategory", // menu item
+          ref: "FoodSubCategory",
           required: true,
         },
         name: String, // snapshot of item name at time of order
@@ -33,10 +33,34 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           default: 0,
         },
-        totalItemPrice: Number, // computed: (price * quantity)
+        totalItemPrice: Number,
+
+    // Optional add-ons for this food item
+    addOns: [
+          {
+            addOnItem: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "AddOnModels",
+              required: true,
+            },
+            name: String, // snapshot of add-on name
+            price: Number, // snapshot of add-on price
+            quantity: {
+              type: Number,
+              default: 1,
+            },
+            image: String,
+            discount: {
+              type: Number,
+              default: 0,
+            },
+            totalItemPrice: Number, // computed: price * quantity
+          },
+        ],
       },
     ],
 
+     
     // Address snapshot (not ref, because customer might delete/update)
     deliveryAddress: {
       name:String,
@@ -69,10 +93,37 @@ const orderSchema = new mongoose.Schema(
     },
 
     // Delivery information
+    deliveryType: {
+      type: String,
+      enum: ["Self Pickup", "Delivery Partner"],
+      default: "Delivery Partner",
+    },
     deliveryPartner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DeliveryPartner",
     },
+    deliveryStatus: {
+      type: String,
+      enum: [
+        "Order Placed",
+        "Preparing",
+        "Out for Delivery",
+        "Delivered",
+        "Cancelled",
+      ],
+      default: "Order Placed",
+    },
+
+    // Extra order instructions & tip
+    instructions: {
+      type: [String], // can store multiple instructions
+      default: [],
+    },
+    tip: {
+      type: Number,
+      default: 0,
+    },
+
     deliveryStatus: {
       type: String,
       enum: [
@@ -111,6 +162,13 @@ const orderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    orderCode: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    
   },
   { timestamps: true }
 );
@@ -127,100 +185,3 @@ export default OrderModel;
 
 
 
-
-/*
-{
-  "_id": "6731b2f7...",
-  "customerId": "66ff9ab1...",
-  "restaurantId": "66ffc4a2...",
-  "items": [
-    {
-      "foodItemId": "66ffda22...",
-      "name": "Paneer Butter Masala",
-      "price": 220,
-      "quantity": 2,
-      "discount": 10,
-      "totalItemPrice": 396
-    },
-    {
-      "foodItemId": "66ffda29...",
-      "name": "Garlic Naan",
-      "price": 40,
-      "quantity": 4,
-      "totalItemPrice": 160
-    }
-  ],
-  "deliveryAddress": {
-    "label": "Home",
-    "street": "MG Road",
-    "city": "Bangalore",
-    "pincode": "560001"
-  },
-  "paymentInfo": {
-    "method": "UPI",
-    "status": "Paid",
-    "transactionId": "txn_93jsk20",
-    "amountPaid": 556
-  },
-  "deliveryStatus": "Out for Delivery",
-  "pricing": {
-    "subTotal": 556,
-    "tax": 28,
-    "deliveryFee": 25,
-    "discount": 50,
-    "total": 559
-  },
-  "orderedAt": "2025-11-07T14:10:00Z"
-}
-
-
-import mongoose from "mongoose";
-
-const deliveryPartnerSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
-      unique: true, // Ensure each delivery partner has a unique phone number
-    },
-    vehicleType: {
-      type: String,
-      enum: ["Bike", "Car", "Truck"], // Type of vehicle used for delivery
-      required: true,
-    },
-    currentLocation: {
-      lat: { type: Number },  // Latitude for current location of the delivery partner
-      lng: { type: Number },  // Longitude for current location of the delivery partner
-    },
-    status: {
-      type: String,
-      enum: ["Available", "On Delivery", "Busy", "Offline"],
-      default: "Available", // Default status of a delivery partner
-    },
-    rating: {
-      type: Number, // Average rating from customers
-      min: 0,
-      max: 5,
-      default: 5,
-    },
-    assignedOrders: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order", // Keep track of orders assigned to this partner
-    }],
-    lastActive: {
-      type: Date,
-      default: Date.now, // Timestamp to track last time the partner was active
-    },
-  },
-  { timestamps: true }
-);
-
-const DeliveryPartnerModel = mongoose.model("DeliveryPartner", deliveryPartnerSchema);
-
-export default DeliveryPartnerModel;
-
-*/

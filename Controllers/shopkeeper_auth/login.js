@@ -42,12 +42,24 @@ const loginController = async (req, res) => {
           });
 
       // console.log('shopkeeperToken : ', shopkeeperToken);
-
       const restaurant = await RestaurantOwnerModel.findOne({ mobile: shopkeeperExist.mobile }).lean();
       const userType = restaurant ? 'restaurantOwner' : 'shopkeeper';
 
-      return res.status(200).json({ message: 'Login successful',
-         business_name:shopkeeperExist.business_name, userType });
+      if (!restaurant) {
+        return res.status(200).json({
+          message: 'Login successful',
+          business_name: shopkeeperExist.business_name,
+          ID: null,
+          userType
+        });
+      }
+      return res.status(200).json({
+        message: 'Login successful',
+        business_name: shopkeeperExist.business_name,
+        ID: restaurant._id,
+        userType
+      });
+
 
     } catch (err) {
       if (err.isJoi) {
@@ -55,7 +67,7 @@ const loginController = async (req, res) => {
       }
 
 
-      console.error(err);
+      console.error('login', err);
       return res.status(500).json({ error: 'Server error' });
     }
   };

@@ -35,6 +35,15 @@ import getAllSubCategory from '../Controllers/all_Restaurants/activitiesByRestua
 import updateSubCategory from '../Controllers/all_Restaurants/activitiesByRestuarent/SubFoodCategory/updateSubFoodCategory.js'
 import deleteSubCategory from '../Controllers/all_Restaurants/activitiesByRestuarent/SubFoodCategory/deteteSubFoodCategory.js'
 
+
+import getAllCustomersOrders from '../Controllers/all_Restaurants/seeAllCustomersOrders/allCustomerOrders.js';
+
+
+import AddOnItemAdd from '../Controllers/all_Restaurants/activitiesByRestuarent/AddOn/addItems.js';
+import getAllAddOnsItems from '../Controllers/all_Restaurants/activitiesByRestuarent/AddOn/getItems.js';
+import deleteAddOnItem from '../Controllers/all_Restaurants/activitiesByRestuarent/AddOn/deleteItems.js';
+import updateAddOnsItem from '../Controllers/all_Restaurants/activitiesByRestuarent/AddOn/update.js';
+
 const router = Router();
 
 
@@ -90,6 +99,20 @@ router.put('/restuarents-update-subcategory/:id',  upload.single('sub-cate_img')
 
 router.delete('/restuarents-delete-sub-category/:id', loggedInOnlyMiddleware, deleteSubCategory);
 
+router.get('/restuarants-gets-all-orders', loggedInOnlyMiddleware, getAllCustomersOrders);
 
 
+
+// add-ons logic routes
+router.post('/restuarants-add-ons-items-add',  upload.single('add-ons_img'),
+                                             loggedInOnlyMiddleware, AddOnItemAdd);
+
+router.get('/restuarants-add-ons-items-gets',loggedInOnlyMiddleware, getAllAddOnsItems);
+router.delete('/restuarents-delete-add-ons-items/:id', loggedInOnlyMiddleware, deleteAddOnItem);
+router.put('/restuarents-update-add-ons-items/:id', upload.single('add-ons_img'),
+                                loggedInOnlyMiddleware, updateAddOnsItem);
+
+
+
+                                             
 export default router;

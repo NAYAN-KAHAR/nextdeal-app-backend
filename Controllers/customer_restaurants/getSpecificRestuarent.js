@@ -21,17 +21,24 @@ const getSpecificRestuarent = async (req, res) => {
         return res.status(404).json({ error: "restuarent not found" });
     }
   
-    const location = await RestaurantLocationModel.findOne({ restaurants_Owner: restuarent._id });
+    const location = await RestaurantLocationModel.findOne({ restaurants_Owner: restuarent._id }).lean();
 
-    // Get other restaurants in the same city (excluding the current restaurant)
-    const recommendedRestaurants = await RestaurantLocationModel.find({
-        city: location.city,
-        restaurants_Owner:  { $ne: restuarent._id } 
-      }).populate('restaurants_Owner').limit(5).lean();
+    const recommendedRestaurants = await RestaurantLocationModel.aggregate([
+      {$match: {city:location.city, restaurants_Owner: {$ne:restuarent._id} }},
+      {
+        $lookup: {
+        from: "restaurantsowners", 
+        localField: "restaurants_Owner",
+        foreignField: "_id",
+        as: "restaurant"
+      }
+      },
+      {$unwind:'$restaurant'},
+      {$limit:5}
+    ])
 
-    return res.status(200).json({ message: "Restaurant retrieved successfully123",
+    return res.status(200).json({ message: "Restaurant retrieved successfully",
                                   restuarent, recommendedRestaurants });
-
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Error", err });
@@ -39,4 +46,3 @@ const getSpecificRestuarent = async (req, res) => {
 };
 
 export default getSpecificRestuarent;
-

@@ -12,7 +12,7 @@ const loggedInOnlyMiddleware = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized: No token provided' });
     }
-    console.log('shop_token', token);
+    // console.log('shop_token', token);
 
     const decoded = jwt.verify(token, process.env.SHOPKEEPER_SECRET);
     const mobile = decoded.mobile;

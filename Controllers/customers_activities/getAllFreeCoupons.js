@@ -7,13 +7,13 @@ const getAllFreeCoupons = async (req, res) => {
     const mobile = req.user.mobile;
     // console.log('Customer Mobile:', mobile);
     // console.log('mobile', mobile);
-    const customer = await customersAuth.findOne({ mobile });
+    const customer = await customersAuth.findOne({ mobile }).lean();
     if (!customer) {
       return res.status(404).json({ error: 'Customer not found' });
     }
 
 
-    const allFreeCoupons = await FreeCoupon.find().populate('shopkeeper');
+    const allFreeCoupons = await FreeCoupon.find().populate('shopkeeper').lean();
     if (!allFreeCoupons.length) {
       return res.status(404).json({ error: 'No free coupons found' });
     }

@@ -2,7 +2,6 @@ import FoodCategory from "../../Models/restuarentActivitiesModels/foodCategoryMo
 import FoodSubCategory from "../../Models/restuarentActivitiesModels/foodSubCategoryModel.js"
 import customersAuth from "../../Models/customerAuth.js"
 import redisClient from "../../config/redis.js";
-import { json } from "express";
 
 
 const getAllFoodCategory = async (req, res) => {

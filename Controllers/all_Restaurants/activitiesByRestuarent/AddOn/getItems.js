@@ -1,8 +1,10 @@
-import FoodCategory from "../../../../Models/restuarentActivitiesModels/foodCategoryModel.js";
+
+import AddOnModel from "../../../../Models/restuarentActivitiesModels/addOn_Model.js"
 import RestaurantOwnerModel from "../../../../Models/restuarentsModel.js";
 
 
-const getAllCategory = async (req, res) => {
+const getAllAddOnsItems = async (req, res) => {
+ 
   try {
     const mobile = req.user.mobile;
 
@@ -15,13 +17,14 @@ const getAllCategory = async (req, res) => {
         return res.status(404).json({ error: "Restaurant owner not found" });
     }
 
-    const updatedData = await FoodCategory.find({ restaurant: owner._id }).lean();
-    return res.status(200).json({message: "Category getting successfully", updatedData});
+    const addOnsData = await AddOnModel.find({ restaurant: owner._id}).lean();
+    return res.status(200).json({ message: "Add-Ons getting successfully", addOnsData });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Error", err });
   }
 };
 
-export default getAllCategory;
 
+
+export default getAllAddOnsItems;

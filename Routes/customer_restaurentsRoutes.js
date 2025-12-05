@@ -21,8 +21,14 @@ import SearchFoodRestuarants from '../Controllers/customer_restaurants/searchFoo
 import customerPlaceOrder from '../Controllers/customer_restaurants/customerPlaceOrder.js';
 import getAllRestuarents from '../Controllers/all_Restaurants/activitiesByRestuarent/getAllRestuarents.js';
 
-import sortRestuarantsByPrice from '../Controllers/customer_restaurants/sortRestuarantsByPrice.js';
+import orderDistanceMessurement from '../Controllers/customer_restaurants/orderDistanceMessure.js';
+import foodCartsItemsDelete from '../Controllers/customer_restaurants/foodCartsItemsDelete.js';
 
+import AllFood99 from '../Controllers/customer_restaurants/AllFood99.js';
+
+import getAddOnsItems from '../Controllers/customer_restaurants/getAddOnsItems.js';
+
+import checkoutGetFoodData from '../Controllers/customer_restaurants/chechoutGetFoodData.js';
 
 const router = Router();
 
@@ -50,7 +56,15 @@ router.get('/get-all-search-foods-restuarants/:name', authMiddleware, SearchFood
 router.post('/customer-place-order', authMiddleware, customerPlaceOrder)
 
 
-router.get('/customer-sort-restaurants-price-wise/:query', authMiddleware, sortRestuarantsByPrice)
+router.post('/customer-restaurants-distance', authMiddleware, orderDistanceMessurement);
+router.delete('/customer-food-items-delete', authMiddleware, foodCartsItemsDelete);
+
+
+router.get('/customer-gets-all-addOn-items/:id', authMiddleware, getAddOnsItems);
+router.get('/customer-gets-all-99-food-items', authMiddleware, AllFood99);
+
+router.get('/get-checkout-data-customer', authMiddleware, checkoutGetFoodData);
+
 
 export default router;
 

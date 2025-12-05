@@ -1,12 +1,13 @@
-import FoodCategory from "../../../../Models/restuarentActivitiesModels/foodCategoryModel.js";
+
+import AddOnModel from "../../../../Models/restuarentActivitiesModels/addOn_Model.js"
 import RestaurantOwnerModel from "../../../../Models/restuarentsModel.js";
 
 
-const getAllCategory = async (req, res) => {
+const deleteAddOnItem = async (req, res) => {
   try {
     const mobile = req.user.mobile;
 
-    if (!mobile ) {
+    if (!mobile || !req.params.id) {
       return res.status(400).json({ error: "Restuarent is not authenticated" });
     }
 
@@ -15,13 +16,13 @@ const getAllCategory = async (req, res) => {
         return res.status(404).json({ error: "Restaurant owner not found" });
     }
 
-    const updatedData = await FoodCategory.find({ restaurant: owner._id }).lean();
-    return res.status(200).json({message: "Category getting successfully", updatedData});
+    await AddOnModel.findByIdAndDelete({_id:req.params.id})
+    return res.status(200).json({message: "Sub-Category deleted successfully"});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Error", err });
   }
 };
 
-export default getAllCategory;
+export default deleteAddOnItem;
 

@@ -11,7 +11,7 @@ const getFoodItemsViewCard = async (req, res) => {
       return res.status(400).json({ error: "Customer is not authenticated " });
     }
 
-    const customer = await customersAuth.findOne({ mobile });
+    const customer = await customersAuth.findOne({ mobile }).lean();
     if (!customer) {
       return res.status(404).json({ error: "Customer not found" });
     }

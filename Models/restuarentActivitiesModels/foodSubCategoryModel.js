@@ -25,9 +25,8 @@ const FoodSubCategorySchema = new mongoose.Schema(
   }
 );
 
-FoodSubCategorySchema.index({ price: 1 });
-FoodSubCategorySchema.index({ restaurant: 1 });
-FoodSubCategorySchema.index({ FoodCategory: 1 });
+FoodSubCategorySchema.index({ name: "text" });
+
 
 const FoodSubCategory = mongoose.model("FoodSubCategory", FoodSubCategorySchema);
 export default FoodSubCategory;
