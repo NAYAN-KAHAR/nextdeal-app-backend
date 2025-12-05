@@ -40,11 +40,11 @@ app.use(helmet());
 app.use(compression());
 
 app.use(cors({
-  //  origin:
-  //   ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
-  //     'https://nextdeal-app-customer-frontend.vercel.app'],
-
-   origin: ['http://localhost:3000', 'http://localhost:3001','http://10.155.70.224:3001'],
+   origin:
+    ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
+      'https://nextdeal-app-customer-frontend.vercel.app'],
+      
+  //  origin: ['http://localhost:3000', 'http://localhost:3001','http://10.155.70.224:3001'],
   credentials: true
 }));
 

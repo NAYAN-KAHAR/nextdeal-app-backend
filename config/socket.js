@@ -12,7 +12,9 @@ const restaurantSockets = new Map();  // restaurantId -> Set of socketIds
 const createSocketServer = (server) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:3000", "http://localhost:3001"],
+      // origin: ["http://localhost:3000", "http://localhost:3001"],
+      origin:  ['https://nextdeal-app-shopkeerper-frontend.vercel.app',
+      'https://nextdeal-app-customer-frontend.vercel.app'],
       credentials: true,
     },
   });
