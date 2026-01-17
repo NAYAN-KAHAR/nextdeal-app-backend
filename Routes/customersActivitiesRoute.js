@@ -17,8 +17,8 @@ import PushCustomefreeRedeemCoupon from '../Controllers/customers_activities/pus
 
 const router = Router();
 
-router.get('/shopkeepers-shops', authMiddleware, getShopkeeperShops);
-router.get('/per-shopkeeper-shop/:mobile',  authMiddleware, getPerShopDetails);
+router.get('/shopkeepers-shops/:city', authMiddleware, getShopkeeperShops);
+router.get('/per-shopkeeper-shop/:shopkeeperId',  authMiddleware, getPerShopDetails);
 router.get('/shopkeeper-category-shop/:category',  authMiddleware, getCategoriesShop);
 router.get('/all-shopkeeper-freecoupons',  authMiddleware, getAllFreeCoupons);
 

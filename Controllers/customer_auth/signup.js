@@ -25,14 +25,24 @@ const signUpController = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     // Let MongoDB handle duplicate customer mobile
+    // const user = await customersAuth.create({
+    //   name: name.toLowerCase(),
+    //   mobile,
+    //   password: hashPassword,
+    // });
+
     const user = await customersAuth.create({
-      name: name.toLowerCase(),
-      mobile,
-      password: hashPassword,
-    });
+    name: name.toLowerCase(),
+    mobile,
+    password: hashPassword,
+    location: {
+      type: 'Point',
+      coordinates: [0, 0] // longitude, latitude
+    }
+  });
 
     return res.status(201).json({ message: 'User created successfully', user });
-
+    
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ error: "Mobile number already registered" });

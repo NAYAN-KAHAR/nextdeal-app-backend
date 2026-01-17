@@ -24,12 +24,22 @@ const customersModel = new mongoose.Schema({
     sparse: true,
     trim: true
   },
-  address: String, // Main address text
+  address: String,
+  city: {
+    type: String,
+    trim: true
+  },
+  state: {
+    type: String,
+    trim: true
+  },
+
   location: {
     type: {
       type: String,       // 'Point'
       enum: ['Point'],
       default: 'Point'
+        
     },
     coordinates: {
       type: [Number],     // [longitude, latitude]

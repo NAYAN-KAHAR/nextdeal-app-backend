@@ -7,6 +7,9 @@ import verifyUser from '../Controllers/customer_auth/verifyUser.js';
 import updateProfile from '../Controllers/customer_auth/update.js';
 import getUser from '../Controllers/customer_auth/getUser.js';
 import authMiddleware from '../Controllers/customer_auth/authMiddleware.js';
+import verifyCustomerOTP from '../Controllers/customer_auth/verifyCustomerOTP.js';
+import customerMobileOTP from '../Controllers/customer_auth/customerMobileOTP.js';
+
 
 import multer from 'multer';
 import cloudinary from 'cloudinary';
@@ -22,8 +25,9 @@ router.get('/customer-profile',authMiddleware, getUser);
 router.get('/verify', verifyUser);
 router.post('/signup', signUpController);
 router.post('/login', loginController);
+router.post('/customer-otp-verification', verifyCustomerOTP);
 router.post('/logout', logoutController);
-
+router.post('/customer-mobile-otp', customerMobileOTP)
 
 
 // cloudinary config

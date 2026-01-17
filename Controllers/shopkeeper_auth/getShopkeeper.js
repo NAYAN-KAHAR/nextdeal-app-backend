@@ -6,7 +6,7 @@ const getShopkeeper = async (req, res) => {
     // req.user is set by authMiddleware
     const mobile = req.user?.mobile;
 
-    const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
+    const shopkeeper = await ShopkeeperAuth.findOne({ mobile }).lean();
 
     if (!shopkeeper) {
       return res.status(404).json({ error: 'User not found' });

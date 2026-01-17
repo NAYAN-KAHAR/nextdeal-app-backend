@@ -5,7 +5,7 @@ import ShopkeeperAuth from "../../Models/shopkeeperAuth.js";
 const createCashfreeOrder = async (req, res) => {
   try {
     const { plan } = req.body;
-    const shopkeeper = await ShopkeeperAuth.findOne({ mobile: req.user.mobile });
+    const shopkeeper = await ShopkeeperAuth.findOne({ mobile: req.user.mobile }).lean();
 
     if (!shopkeeper) {
       return res.status(404).json({ error: "Shopkeeper not found" });
@@ -41,7 +41,6 @@ const createCashfreeOrder = async (req, res) => {
     };
 
     const response = await axios.post(url, data, { headers });
-
     const cashfreeData = response.data;
 
     // ✅ Cashfree v2022-09-01 doesn't return "status", so just check if session exists

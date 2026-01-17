@@ -8,7 +8,7 @@ import fs from 'fs-extra';
 
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, address } = req.body;
+    const { name, email, address, city, state, location, password } = req.body;
     const mobile = req.user?.mobile;
 
     // console.log('decoded', mobile);
@@ -51,13 +51,25 @@ const updateProfile = async (req, res) => {
     // if (email) updateFields.email = email;
     if (address) updateFields.address = address;
     if (profileImg) updateFields.profileImg = profileImg;
+    if (location && location.coordinates) {
+      updateFields.location = {
+        type: "Point",
+        coordinates: location.coordinates
+      };
+    }
+    if (city) updateFields.city = city;
+    if (state) updateFields.state = state;
+    if (password){
+      const hashPassword = await bcrypt.hash(password, 10);
+      updateFields.password = hashPassword;
+    } 
 
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields provided to update' });
     }
 
     const updatedUser = await customersAuth.findOneAndUpdate({ mobile }, updateFields, { new: true });
-    return res.status(200).json({ message: 'Profile updated', user: updatedUser });
+    return res.status(200).json({ message: 'Profile updated', user: updatedUser, isUpdate:true });
 
   } catch (err) {
     console.error("Update Profile Error:", err);

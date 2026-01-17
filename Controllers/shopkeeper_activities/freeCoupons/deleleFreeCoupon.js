@@ -11,12 +11,12 @@ const DeleteFreeCoupon = async (req, res) => {
       return res.status(400).json({ error: 'Coupon ID is required' });
     }
 
-    const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
+    const shopkeeper = await ShopkeeperAuth.findOne({ mobile }).lean();
     if (!shopkeeper) {
       return res.status(404).json({ error: 'Shopkeeper not found' });
     }
 
-    const coupon = await FreeCoupon.findOne({ _id: couponId, shopkeeper: shopkeeper._id });
+    const coupon = await FreeCoupon.findOne({ _id: couponId, shopkeeper: shopkeeper._id }).lean();
     if (!coupon) {
       return res.status(404).json({ error: 'Coupon not found for this shopkeeper' });
     }

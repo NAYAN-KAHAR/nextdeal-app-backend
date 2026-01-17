@@ -4,33 +4,30 @@ import ShopkeeperAuth from '../../../Models/shopkeeperAuth.js';
 import customersAuth from '../../../Models/customerAuth.js';
 import NextOffersModel from '../../../Models/shopkeeperActivitiesModels/nextOrderModel.js';
 
+
 const NextOfferCreate = async (req, res) => {
     try {
         const shopkeeperMobile = req.user.mobile;
 
         const {mobile, offer } = req.body; 
-        console.log(req.body);
+        // console.log(req.body);
    
-
         if(!mobile || !offer){
           return res.status(404).json({ error: 'Fields are required'});
         }
         
-
-        const hasShopkeeper = await ShopkeeperAuth.findOne({ mobile: shopkeeperMobile });
-
+        const  [hasShopkeeper, hasCustomer, selectedCoupon] =  await Promise.all([
+            ShopkeeperAuth.findOne({ mobile: shopkeeperMobile }).lean(),
+            customersAuth.findOne({ mobile }).lean(),
+            RecurringCouponModel.findById(offer).lean(),
+        ])
+       
         if (!hasShopkeeper) {
         return res.status(404).json({ error: 'Shopkeeper not found' });
         };
-
-        const hasCustomer = await customersAuth.findOne({ mobile })
-
         if (!hasCustomer) {
-          return res.status(404).json({ error: 'Customer not found' });
+          return res.status(404).json({ error: 'Customer Mobile Number Not Found' });
         };
-
-
-        const selectedCoupon = await RecurringCouponModel.findById(offer);
         if (!selectedCoupon) {
         return res.status(404).json({ error: 'Recurring coupon not found' });
         }

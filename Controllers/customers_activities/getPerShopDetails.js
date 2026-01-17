@@ -8,22 +8,24 @@ import SaleCouponsModel from  '../../Models/shopkeeperActivitiesModels/saleCoupo
 
 const getPerShopDetails = async (req, res) => {
   try {
-    const { mobile } = req.params; 
-    if (!mobile) {
+    const { shopkeeperId } = req.params; 
+    if (!shopkeeperId) {
       return res.status(400).json({ error: 'Mobile number is required' });
     }
 
-    const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
+    const shopkeeper = await ShopkeeperAuth.findById(shopkeeperId);
     if (!shopkeeper) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'Shopkeeper not found' });
     }
     // console.log('shopkeeperId:', shopkeeper._id);
   
-     const getFreeCoupons = await FreeCoupon.find({ shopkeeper:  new mongoose.Types.ObjectId(shopkeeper._id )});
+     const getFreeCoupons = await FreeCoupon.find(
+      { shopkeeper:  new mongoose.Types.ObjectId(shopkeeper._id )});
+
     //  const getRecurringCoupons = await RecurringCouponModel.find({ shopkeeper:  new mongoose.Types.ObjectId(shopkeeper._id )});
 
      if (getFreeCoupons.length === 0) {
-         return res.json({ message: 'Free coupon not found' });
+         return res.json({shopkeeper, message: 'Free coupon not found' });
      }
    const filteredCoupon = [];
 
@@ -31,7 +33,7 @@ const getPerShopDetails = async (req, res) => {
             console.log('coupon', coupon);
             const exists = await SaleCouponsModel.exists({
                  coupon_id:coupon._id,
-                 shopkeeper_mobile:mobile,
+                 shopkeeper_mobile:shopkeeper.mobile,
              });
              console.log('exists', exists);
              if(!exists){

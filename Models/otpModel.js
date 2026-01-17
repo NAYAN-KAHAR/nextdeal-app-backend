@@ -13,12 +13,12 @@ const otpSchema = new mongoose.Schema({
   role: { 
     type: String, 
     required: true, 
-    enum: ['Customer', 'Shopkeeper'] // exact model names
+    enum: ['CustomerModel', 'ShopkeeperAuth', 'RestaurantOwnerModel']
   },
   createdAt: { 
     type: Date, 
     default: Date.now, 
-    expires: 120 // auto-delete after 5 minutes
+    expires: 300 // auto-delete after 5 minutes
   }
 });
 
@@ -27,9 +27,3 @@ otpSchema.index({ user: 1, role: 1 });
 
 const OTP = mongoose.model("OTP", otpSchema);
 export default OTP;
-
-/*
-import OTP from './models/OTP.js';
-const otpRecord = await OTP.findOne({ otp: '123456' }).populate('user');
-console.log(otpRecord.user); // full Shopkeeper or Customer document
-*/

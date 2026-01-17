@@ -11,7 +11,7 @@
   "author": "subho",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.12.2",
+    "axios": "^1.13.2",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.7.0",
     "compression": "^1.8.1",
@@ -30,7 +30,8 @@
     "multer": "^2.0.2",
     "redis": "^5.9.0",
     "socket.io": "^4.8.1",
-    "stripe": "^19.1.0"
+    "stripe": "^19.1.0",
+    "twilio": "^5.10.7"
   },
   "type": "module",
   "devDependencies": {

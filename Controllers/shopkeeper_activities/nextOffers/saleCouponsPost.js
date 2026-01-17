@@ -18,7 +18,7 @@ const saleCouponsCreate = async (req, res) => {
         
        
 
-        const hasShopkeeper = await ShopkeeperAuth.findOne({ mobile: shopkeeperMobile });
+        const hasShopkeeper = await ShopkeeperAuth.findOne({ mobile: shopkeeperMobile }).lean();
         if (!hasShopkeeper) {
         return res.status(404).json({ error: 'Shopkeeper not found' });
         };

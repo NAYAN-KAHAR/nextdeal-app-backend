@@ -105,6 +105,7 @@ const orderSchema = new mongoose.Schema(
     deliveryStatus: {
       type: String,
       enum: [
+        "Pending",
         "Order Placed",
         "Preparing",
         "Out for Delivery",

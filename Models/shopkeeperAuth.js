@@ -16,5 +16,13 @@ const ShopkeepersModel = new mongoose.Schema({
 
 }, { timestamps: true });
 
+
+// ⭐ EXTRA INDEXES TO BOOST PERFORMANCE
+ShopkeepersModel.index({ business_category: 1 });
+ShopkeepersModel.index({ city: 1, address: 1 }); // compound
+ShopkeepersModel.index({ city: 1, address: 1, business_category: 1 }); // mega-fast search
+
+
+
 const ShopkeeperAuth = mongoose.model('Shopkeepers', ShopkeepersModel);
 export default ShopkeeperAuth;

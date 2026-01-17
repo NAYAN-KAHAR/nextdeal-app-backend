@@ -31,5 +31,7 @@ const nextOfferSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
+nextOfferSchema.index({ shopkeeper: 1, createdAt: -1 });
 const NextOffersModel = mongoose.model("NextOffers", nextOfferSchema);
+
 export default NextOffersModel;

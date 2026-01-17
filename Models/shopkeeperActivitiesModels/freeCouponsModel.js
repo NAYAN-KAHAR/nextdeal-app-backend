@@ -30,6 +30,9 @@ const freeCouponSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+
+freeCouponSchema.index({ shopkeeper: 1 });
+
 const FreeCoupon = mongoose.model("FreeCoupon", freeCouponSchema);
 
 export default FreeCoupon;

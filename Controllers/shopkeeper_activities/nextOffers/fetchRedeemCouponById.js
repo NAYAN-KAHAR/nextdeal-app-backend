@@ -6,7 +6,7 @@ const fetchRedeemCouponById = async (req, res) => {
         const mobile = req.user.mobile;
         const { id }  = req.params;
 
-        const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
+        const shopkeeper = await ShopkeeperAuth.findOne({ mobile }).lean();
         if (!shopkeeper) {
         return res.status(404).json({ error: 'Shopkeeper not found' });
         }
@@ -16,7 +16,7 @@ const fetchRedeemCouponById = async (req, res) => {
         }
 
    
-       const redeemed = await redeemedCouponModel.findById(id);
+       const redeemed = await redeemedCouponModel.findById(id).lean();
          if(!redeemed){
             return res.json({message:'Does Not exist Redeemed Coupon'});
         }

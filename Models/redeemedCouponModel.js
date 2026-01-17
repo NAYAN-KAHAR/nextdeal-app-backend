@@ -39,11 +39,10 @@ const redeemedCouponSchema = new mongoose.Schema({
   default: false
 }
 });
-// ✅ Unique index to prevent duplicate redemption
-redeemedCouponSchema.index(
-  { shopkeeper_mobile: 1, customer_mobile: 1, coupon_id: 1 },
-  { unique: true }
-);
+
+// Unique index to prevent duplicate redemption
+redeemedCouponSchema.index({ shopkeeper_mobile: 1, customer_mobile: 1, coupon_id: 1 });
+redeemedCouponSchema.index({ shopkeeper_mobile: 1, redeemedAt: -1 });
 
 const redeemedCouponModel=mongoose.model('RedeemedCoupon', redeemedCouponSchema);
 export default redeemedCouponModel;

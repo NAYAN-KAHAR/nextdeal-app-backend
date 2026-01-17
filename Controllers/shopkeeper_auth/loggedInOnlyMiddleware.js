@@ -22,7 +22,7 @@ const loggedInOnlyMiddleware = async (req, res, next) => {
       return res.status(404).json({ error: 'Shopkeeper not found' });
     }
 
-    const restaurant = await RestaurantOwnerModel.findOne({ mobile: shopkeeper.mobile });
+    const restaurant = await RestaurantOwnerModel.findOne({ mobile: shopkeeper.mobile }).lean();
 
     req.user = decoded;
     req.userType = restaurant ? 'restaurantOwner' : 'shopkeeper';

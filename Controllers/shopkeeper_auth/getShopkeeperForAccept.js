@@ -10,12 +10,11 @@ const getShopkeeperForAccept = async (req, res) => {
     if(!mobile){
         return res.status(404).json({ error: 'no mobile number found' });
     }
-    const shopkeeper = await ShopkeeperAuth.findOne({ mobile });
+    const shopkeeper = await ShopkeeperAuth.findOne({ mobile }).lean();
 
     if (!shopkeeper) {
       return res.status(404).json({ error: 'User not found' });
     }
-
     return res.status(200).json({ message: 'Get user successfully', shopkeeper });
   } catch (err) {
     console.error(err);

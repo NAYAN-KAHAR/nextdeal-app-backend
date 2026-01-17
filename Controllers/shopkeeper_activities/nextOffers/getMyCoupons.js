@@ -5,11 +5,12 @@ import customersAuth from '../../../Models/customerAuth.js';
 import NextOffersModel from '../../../Models/shopkeeperActivitiesModels/nextOrderModel.js';
 import SaleCouponsModel from '../../../Models/shopkeeperActivitiesModels/saleCouponsModel.js';
 
+
 const getMyCoupons = async (req, res) => {
     try {
         const mobile = req.user.mobile;
         console.log('mobile', mobile);
-        const hasCustomer = await customersAuth.findOne({ mobile })
+        const hasCustomer = await customersAuth.findOne({ mobile }).lean();
         if (!hasCustomer) {
           return res.status(404).json({ error: 'Customer not found' });
         };
@@ -19,10 +20,7 @@ const getMyCoupons = async (req, res) => {
         .populate('shopkeeper');
 
         console.log(hasCustomer);
-
         const filteredCoupons = [];
-
-    
 
         for (const offer of myCoupons) {
             const isUsed = await SaleCouponsModel.exists({

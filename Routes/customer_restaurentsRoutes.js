@@ -25,10 +25,11 @@ import orderDistanceMessurement from '../Controllers/customer_restaurants/orderD
 import foodCartsItemsDelete from '../Controllers/customer_restaurants/foodCartsItemsDelete.js';
 
 import AllFood99 from '../Controllers/customer_restaurants/AllFood99.js';
-
 import getAddOnsItems from '../Controllers/customer_restaurants/getAddOnsItems.js';
-
 import checkoutGetFoodData from '../Controllers/customer_restaurants/chechoutGetFoodData.js';
+
+import createCashfreePaymentForOrder from '../Controllers/customer_auth/createCheckoutPayment.js';
+import confirmPayment from '../Controllers/customer_auth/payment-confirm-foodOrder.js';
 
 const router = Router();
 
@@ -64,6 +65,10 @@ router.get('/customer-gets-all-addOn-items/:id', authMiddleware, getAddOnsItems)
 router.get('/customer-gets-all-99-food-items', authMiddleware, AllFood99);
 
 router.get('/get-checkout-data-customer', authMiddleware, checkoutGetFoodData);
+
+
+router.post('/customer-order-payment', authMiddleware, createCashfreePaymentForOrder);
+router.post('/customer-order-confirm-payment', confirmPayment);
 
 
 export default router;

@@ -20,15 +20,14 @@ import loggedInOnlyMiddleware from '../Controllers/shopkeeper_auth/loggedInOnlyM
 import getShopkeeperForAccept from '../Controllers/shopkeeper_auth/getShopkeeperForAccept.js';
 import RestaurantOwnerLogic from '../Controllers/shopkeeper_auth/RestaurantOwnerLogic.js'
 
-import otpGenerate from '../Controllers/shopkeeper_auth/otpGenerate.js';
-import otpVerification from '../Controllers/shopkeeper_auth/otpVerification.js'
+import verifyShopkeeperOTP from '../Controllers/shopkeeper_auth/verifyShopkeeperOTP.js';
+
 
 import multer from 'multer';
 import cloudinary from 'cloudinary';
 import fs from 'fs-extra';
 
 import dotenv from 'dotenv';
-import { decode } from 'jsonwebtoken';
 import RestaurantOwnerModel from '../Models/restuarentsModel.js';
 dotenv.config(); 
 
@@ -50,6 +49,7 @@ router.get('/shopkeeper-profile',authMiddleware, getShopkeeper);
 router.get('/shopkeeper-subs', authMiddleware, getShopkeeperSubs);
 router.post('/shop-signup', signUpController);
 router.post('/shop-login', loginController);
+router.post('/shopkeeper-otp-verification', verifyShopkeeperOTP);
 router.post('/shop-logout', logoutController);
 
 // router.post('/shop-subscribePlan', authMiddleware, SubscribePlan);
@@ -59,8 +59,7 @@ router.post('/shop-create-checkout-session', loggedInOnlyMiddleware, createCashf
 router.post('/shop-created-as-restuarent', loggedInOnlyMiddleware, RestaurantOwnerLogic)
 
 
-router.post('/mobile-generated-otp', otpGenerate);
-router.post('/mobile-verification-otp', otpVerification);
+
 
 // cloudinary config
 cloudinary.config({

@@ -35,17 +35,17 @@ const SubscribePlan = async (req, res) => {
 
       await subscription.save();
       return res.status(200).json({
-        message: `🎉 You are on a 1-month free trial (${plan} plan).`,
+        message: `You are on a 1-month free trial (${plan} plan).`,
         subscription,
       });
     }
 
-    // ⚙️ Existing user - check if trial expired or active
+    // Existing user - check if trial expired or active
     const trialExpired = subscription.trial && subscription.expiresAt <= now;
     const canResubscribe = !subscription.trial && subscription.expiresAt <= now;
 
     if (trialExpired || canResubscribe) {
-      // ✅ Paid subscription renewal
+      // Paid subscription renewal
       const expiresAt = new Date(now);
       if (plan === 'yearly') expiresAt.setFullYear(expiresAt.getFullYear() + 1);
       else expiresAt.setMonth(expiresAt.getMonth() + 1);
@@ -61,7 +61,7 @@ const SubscribePlan = async (req, res) => {
 
       await subscription.save();
       return res.status(200).json({
-        message: `✅ You are now subscribed to the ${plan} plan.`,
+        message: `You are now subscribed to the ${plan} plan.`,
         subscription,
       });
     }

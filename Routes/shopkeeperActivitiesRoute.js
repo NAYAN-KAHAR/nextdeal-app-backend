@@ -28,6 +28,8 @@ import ListenRedeemCoupon from  '../Controllers/shopkeeper_activities/nextOffers
 import fetchRedeemCouponById from '../Controllers/shopkeeper_activities/nextOffers/fetchRedeemCouponById.js'
 
 import getAllRecurringCouponsOffers from '../Controllers/shopkeeper_activities/recurringCoupons/recurringCoupon_offers.js'
+import fetchOfferAndRedeemCoupons from '../Controllers/shopkeeper_activities/nextOffers/getOffers_Redeem_Coupons.js';
+
 
 const router = Router();
 
@@ -61,5 +63,7 @@ router.get('/shop-get-allsale-coupons', authMiddleware, getAllSalesCoupons);
 
 router.get('/shop-listen-coupons', authMiddleware, ListenRedeemCoupon);
 router.get('/shop-fetch-redeemcoupon-data/:id', authMiddleware, fetchRedeemCouponById);
+
+router.get('/shopkeeper-all-offers-redeem-coupons', authMiddleware, fetchOfferAndRedeemCoupons);
 
 export default router;
